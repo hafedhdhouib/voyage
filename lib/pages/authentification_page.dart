@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class InscriptionPage extends StatelessWidget {
+class AuthentificationPage extends StatelessWidget {
   late SharedPreferences prefs;
   TextEditingController txt_login = TextEditingController();
   TextEditingController txt_password = TextEditingController();
@@ -10,7 +10,7 @@ class InscriptionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("page d'inscription"),
+        title: Text("page d'authentification"),
         backgroundColor: Colors.lightBlue,
       ),
       body: Column(
@@ -44,10 +44,10 @@ class InscriptionPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
-                _onIscrit(context);
+                _onAuthentification(context);
               },
               child: Text(
-                'inscription',
+                'connexion',
                 style: TextStyle(fontSize: 24),
               ),
               style: ElevatedButton.styleFrom(
@@ -55,25 +55,39 @@ class InscriptionPage extends StatelessWidget {
                   minimumSize: Size.fromHeight(50)),
             ),
           ),
-          TextButton(onPressed: (){
-            Navigator.pushNamed(context, '/authentitfication');
+          TextButton(onPressed: ()=>{
+            Navigator.pushNamed(context, '/inscription')
 
-          }, child: Text("J'ai deja un compte"))
+          }, child: Text("Nouvelle connection"))
         ],
       ),
     );
   }
 
-  Future<void> _onIscrit(BuildContext context) async {
+  Future<void> _onAuthentification(BuildContext context) async {
     prefs = await SharedPreferences.getInstance();
     if (!txt_login.text.isEmpty && !txt_password.text.isEmpty) {
-      prefs.setString("login", txt_login.text);
-      prefs.setString("password", txt_password.text);
-      prefs.setBool("connecte", true);
-      Navigator.pop(context);
-      Navigator.pushNamed(context, '/home');
-    } else {
-      const snackbar = SnackBar(content: Text("Id ou mot de passe incorreect"));
+       String? login = prefs.getString("login");
+       String? password = prefs.getString("password");
+
+       if ( login == txt_login.text && password == txt_password.text ){
+         prefs.setBool("connecte", true);
+         Navigator.pop(context);
+         Navigator.pushNamed(context, '/home');
+       }
+       else {
+         print(password);
+         const snackbar = SnackBar(content: Text("Id ou mot de passe incorreect"));
+         ScaffoldMessenger.of(context).showSnackBar(snackbar);
+
+       }
     }
+    else
+      {
+        print('object');
+        const snackbar = SnackBar(content: Text("Id ou mot de passe sont required"));
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+
+      }
   }
 }

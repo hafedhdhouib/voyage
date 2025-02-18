@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voyage/menu/drawer_widget.dart';
 
 class HomePage extends StatelessWidget {
   late SharedPreferences prefs;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: MyDrawer(),
       appBar: AppBar(
         title: Text("Home Page"),
         backgroundColor: Colors.blue,
