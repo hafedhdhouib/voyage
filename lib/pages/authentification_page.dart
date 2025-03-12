@@ -1,93 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 class AuthentificationPage extends StatelessWidget {
+  TextEditingController txt_login = new TextEditingController();
+  TextEditingController txt_password = new TextEditingController();
   late SharedPreferences prefs;
-  TextEditingController txt_login = TextEditingController();
-  TextEditingController txt_password = TextEditingController();
+  late String login;
+  late String password;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("page d'authentification"),
-        backgroundColor: Colors.lightBlue,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+        appBar: AppBar(
+          title: Text("Authentification Page"),
+          backgroundColor: Colors.blue,
+        ),
+
+        body: Column(children: [
+          Container(
+            padding: EdgeInsets.all(10),
             child: TextFormField(
+              controller: txt_login,
               decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person),
-                  hintText: 'Identifinat',
+                  hintText: "Identifiant",
                   border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
-                      borderRadius: BorderRadius.circular(10))),
-              controller: txt_login,
+                      borderRadius: BorderRadius.circular(10)
+                  )
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          Container(
+            padding: EdgeInsets.all(10),
             child: TextFormField(
               obscureText: true,
+              controller: txt_password,
               decoration: InputDecoration(
                   prefixIcon: Icon(Icons.lock),
-                  hintText: 'Password',
+                  hintText: "Mot de Passe",
                   border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
-                      borderRadius: BorderRadius.circular(10))),
-              controller: txt_password,
+                      borderRadius: BorderRadius.circular(10)
+                  )
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(10),
             child: ElevatedButton(
-              onPressed: () {
-                _onAuthentification(context);
-              },
-              child: Text(
-                'connexion',
-                style: TextStyle(fontSize: 24),
-              ),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  minimumSize: Size.fromHeight(50)),
+                onPressed: () {
+                  _onAuthentificate(context);
+                },
+                child: Text("Connexion",
+                  style: TextStyle(color: Colors.white, fontSize: 22),),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    minimumSize: Size.fromHeight(50)
+                )
             ),
           ),
-          TextButton(onPressed: ()=>{
-            Navigator.pushNamed(context, '/inscription')
-
-          }, child: Text("Nouvelle connection"))
-        ],
-      ),
+          TextButton(
+              onPressed:(){ Navigator.pushNamed(context,'/inscription');}, child: Text("nouveau compte"))
+        ],)
     );
   }
 
-  Future<void> _onAuthentification(BuildContext context) async {
+
+  Future<void> _onAuthentificate(BuildContext context) async {
     prefs = await SharedPreferences.getInstance();
     if (!txt_login.text.isEmpty && !txt_password.text.isEmpty) {
-       String? login = prefs.getString("login");
-       String? password = prefs.getString("password");
+      String ?login=prefs.getString("login");
+      String ?password=prefs.getString("password");
+      prefs.setBool("connecte", true);
+      Navigator.pop(context);
+      Navigator.pushNamed(context, '/home');
+    }
 
-       if ( login == txt_login.text && password == txt_password.text ){
-         prefs.setBool("connecte", true);
-         Navigator.pop(context);
-         Navigator.pushNamed(context, '/home');
-       }
-       else {
-         print(password);
-         const snackbar = SnackBar(content: Text("Id ou mot de passe incorreect"));
-         ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    else {
+      const snackBar = SnackBar(
 
-       }
+        content: Text('Id ou mot de passe vides'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+    if (txt_login==login && txt_password==password)
+    {
+      prefs.setBool("connecte", true);
+      Navigator.pop(context);
     }
     else
       {
-        print('object');
-        const snackbar = SnackBar(content: Text("Id ou mot de passe sont required"));
-        ScaffoldMessenger.of(context).showSnackBar(snackbar);
-
+        const snackBar = SnackBar(
+          content: Text('Identifiant ou mot de passe incorrect'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
+
   }
+  
 }

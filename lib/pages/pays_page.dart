@@ -7,13 +7,14 @@ class PaysPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
+      drawer: MyDeawer(),
       appBar: AppBar(
-        title: Text('Page contact'),
+        title: Text("Page Pays"),
+        backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Text(
-          'pays',
+            "Page Pays",
           style: TextStyle(fontSize: 22),
         ),
       ),
